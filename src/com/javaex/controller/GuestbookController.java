@@ -20,8 +20,10 @@ public class GuestbookController extends HttpServlet {
 		
 		//파라미터 action 값 받아오기
 		String action = request.getParameter("action");
-		//확인
 		System.out.println(action);
+		
+		//Encoding
+		request.setCharacterEncoding("UTF-8");
 		
 		//Action If-문
 		if ("addlist".equals(action)) {
@@ -56,8 +58,31 @@ public class GuestbookController extends HttpServlet {
 			//Redirect
 			response.sendRedirect("./gbc?action=addlist");
 			
+		} else if ("dform".equals(action)) {
+			
+			//Guestbook_No 받아오기
+			int no = Integer.parseInt(request.getParameter("no"));
+			
+			//Set Attribute
+			request.setAttribute("no", no);
+			
+			//Request Dispatcher
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/deleteForm.jsp");
+			rd.forward(request, response);
+			
 		} else if ("delete".equals(action)) {
 			
+			//Parameter 가져오기
+			String password = request.getParameter("password");
+			int guestbookNo = Integer.parseInt(request.getParameter("no"))  ;
+			
+			GuestbookDao guestbookDao = new GuestbookDao();
+			GuestbookVo deletepw = new GuestbookVo (guestbookNo, password);
+			//Delete
+			guestbookDao.guestbookDelete(deletepw);
+
+			//Redirect
+			response.sendRedirect("./gbc?action=addlist");
 		}
 	}
 
