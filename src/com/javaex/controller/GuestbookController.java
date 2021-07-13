@@ -18,12 +18,12 @@ public class GuestbookController extends HttpServlet {
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		//Encoding
+		request.setCharacterEncoding("UTF-8");
+		
 		//파라미터 action 값 받아오기
 		String action = request.getParameter("action");
 		System.out.println(action);
-		
-		//Encoding
-		request.setCharacterEncoding("UTF-8");
 		
 		//Action If-문
 		if ("addlist".equals(action)) {
