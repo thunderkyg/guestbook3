@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.javaex.dao.GuestbookDao;
+import com.javaex.util.WebUtil;
 import com.javaex.vo.GuestbookVo;
 
 @WebServlet("/gbc")
@@ -35,10 +36,11 @@ public class GuestbookController extends HttpServlet {
 			request.setAttribute("guestList", guestList);
 			
 			//Request Dispatcher --> forward할 주소 입력하기
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/addlist.jsp");
+//			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/addlist.jsp");
+//			rd.forward(request, response);
 			
-			//Forward 실행
-			rd.forward(request, response);
+			WebUtil.forward(request, response, "./WEB-INF/addlist.jsp");
+			
 			// Forward 할때 attribute(guestList[List])가 있음. 
 		} else if ("add".equals(action)) {
 			
@@ -56,8 +58,8 @@ public class GuestbookController extends HttpServlet {
 			guestbookDao.guestbookInsert(guestbookVo);
 			
 			//Redirect
-			response.sendRedirect("./gbc?action=addlist");
-			
+//			response.sendRedirect("./gbc?action=addlist");
+			WebUtil.redirect(request, response, "./gbc?action=addlist");
 		} else if ("dform".equals(action)) {
 			
 			//Guestbook_No 받아오기
@@ -67,8 +69,9 @@ public class GuestbookController extends HttpServlet {
 			request.setAttribute("no", no);
 			
 			//Request Dispatcher
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/deleteForm.jsp");
-			rd.forward(request, response);
+//			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/deleteForm.jsp");
+//			rd.forward(request, response);
+			WebUtil.forward(request, response, "./WEB-INF/deleteForm.jsp");
 			
 		} else if ("delete".equals(action)) {
 			
@@ -82,7 +85,8 @@ public class GuestbookController extends HttpServlet {
 			guestbookDao.guestbookDelete(deletepw);
 
 			//Redirect
-			response.sendRedirect("./gbc?action=addlist");
+//			response.sendRedirect("./gbc?action=addlist");
+			WebUtil.redirect(request, response, "./gbc?action=addlist");
 		}
 	}
 
