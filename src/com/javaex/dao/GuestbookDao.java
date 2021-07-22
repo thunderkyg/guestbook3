@@ -130,7 +130,7 @@ public class GuestbookDao {
 				query += " where guestbook_no = ? ";
 				query += " and password =  ?";
 				pstmt = conn.prepareStatement(query);
-				pstmt.setInt(1, g.getGuestbook_no());
+				pstmt.setInt(1, g.getGuestbookNo());
 				pstmt.setString(2, g.getPassword());
 
 				count = pstmt.executeUpdate();

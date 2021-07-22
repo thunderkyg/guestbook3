@@ -3,7 +3,7 @@ package com.javaex.vo;
 public class GuestbookVo {
 
 	// Field
-	private int guestbook_no;
+	private int guestbookNo;
 	private String name;
 	private String password;
 	private String content;
@@ -14,8 +14,8 @@ public class GuestbookVo {
 
 	}
 	
-	public GuestbookVo(int guestbook_no, String password) {
-		this.guestbook_no = guestbook_no;
+	public GuestbookVo(int guestbookNo, String password) {
+		this.guestbookNo = guestbookNo;
 		this.password = password;
 	}
 
@@ -25,8 +25,8 @@ public class GuestbookVo {
 		this.content = content;
 	}
 	
-	public GuestbookVo(int guestbook_no, String name, String password, String content, String reg_date) {
-		this.guestbook_no = guestbook_no;
+	public GuestbookVo(int guestbookNo, String name, String password, String content, String reg_date) {
+		this.guestbookNo = guestbookNo;
 		this.name = name;
 		this.password = password;
 		this.content = content;
@@ -35,17 +35,18 @@ public class GuestbookVo {
 
 	// Method - G/S
 
-	public int getGuestbook_no() {
-		return guestbook_no;
+	public int getGuestbookNo() {
+		return guestbookNo;
 	}
-
-	public void setGuestbook_no(int guestbook_no) {
-		this.guestbook_no = guestbook_no;
+	
+	public void setGuestbookNo(int guestbookNo) {
+		this.guestbookNo = guestbookNo;
 	}
 
 	public String getName() {
 		return name;
 	}
+
 
 	public void setName(String name) {
 		this.name = name;
@@ -79,7 +80,7 @@ public class GuestbookVo {
 
 	@Override
 	public String toString() {
-		return "GuestbookVo [guestbook_no=" + guestbook_no + ", name=" + name + ", password=" + password + ", content="
+		return "GuestbookVo [guestbookNo=" + guestbookNo + ", name=" + name + ", password=" + password + ", content="
 				+ content + ", reg_date=" + reg_date + "]";
 	}
 

@@ -1,97 +1,77 @@
 package com.javaex.controller;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.javaex.dao.GuestbookDao;
-import com.javaex.util.WebUtil;
 import com.javaex.vo.GuestbookVo;
 
-@WebServlet("/gbc")
-public class GuestbookController extends HttpServlet {
-       
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		//Encoding
-		request.setCharacterEncoding("UTF-8");
-		
-		//파라미터 action 값 받아오기
-		String action = request.getParameter("action");
-		System.out.println(action);
-		
-		//Action If-문
-		if ("addlist".equals(action)) {
-			//리스트 불러오기
-			GuestbookDao guestbookDao = new GuestbookDao();
-			List<GuestbookVo> guestList = guestbookDao.getList();
-			
-			//Attribute로 데이터 넣기
-			request.setAttribute("guestList", guestList);
-			
-			//Request Dispatcher --> forward할 주소 입력하기
-//			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/addlist.jsp");
-//			rd.forward(request, response);
-			
-			WebUtil.forward(request, response, "./WEB-INF/addlist.jsp");
-			
-			// Forward 할때 attribute(guestList[List])가 있음. 
-		} else if ("add".equals(action)) {
-			
-			//Encoding
-			request.setCharacterEncoding("UTF-8");
-			
-			//Parameter 가져오기
-			String name = request.getParameter("name");
-			String password = request.getParameter("password");
-			String content = request.getParameter("content");
-			
-			//DB에 저장하기
-			GuestbookVo guestbookVo = new GuestbookVo(name, password, content);
-			GuestbookDao guestbookDao = new GuestbookDao();
-			guestbookDao.guestbookInsert(guestbookVo);
-			
-			//Redirect
-//			response.sendRedirect("./gbc?action=addlist");
-			WebUtil.redirect(request, response, "./gbc?action=addlist");
-		} else if ("dform".equals(action)) {
-			
-			//Guestbook_No 받아오기
-			int no = Integer.parseInt(request.getParameter("no"));
-			
-			//Set Attribute
-			request.setAttribute("no", no);
-			
-			//Request Dispatcher
-//			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/deleteForm.jsp");
-//			rd.forward(request, response);
-			WebUtil.forward(request, response, "./WEB-INF/deleteForm.jsp");
-			
-		} else if ("delete".equals(action)) {
-			
-			//Parameter 가져오기
-			String password = request.getParameter("password");
-			int guestbookNo = Integer.parseInt(request.getParameter("no"))  ;
-			
-			GuestbookDao guestbookDao = new GuestbookDao();
-			GuestbookVo deletepw = new GuestbookVo (guestbookNo, password);
-			//Delete
-			guestbookDao.guestbookDelete(deletepw);
+@Controller
+@RequestMapping(value = "gbc")
+public class GuestbookController {
 
-			//Redirect
-//			response.sendRedirect("./gbc?action=addlist");
-			WebUtil.redirect(request, response, "./gbc?action=addlist");
-		}
+	//Method Start
+	//------------------------------ AddList ------------------------------//
+	@RequestMapping(value="/addlist", method = { RequestMethod.GET, RequestMethod.POST } )
+	public String addlist(Model model) {
+		
+		//List Array from Database
+		GuestbookDao guestbookDao = new GuestbookDao();
+		List<GuestbookVo> guestList = guestbookDao.getList();
+		
+		//Attribute
+		model.addAttribute("guestList", guestList);
+		
+		return "/WEB-INF/addlist.jsp";
 	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+	
+	//------------------------------ Add(Insert Function) ------------------------------//
+	@RequestMapping(value="/add", method = { RequestMethod.GET, RequestMethod.POST } )
+	public String add(//@RequestParam("name") String name,
+					  //@RequestParam("password") String password,
+					  //@RequestParam("content") String content
+					  @ModelAttribute GuestbookVo guestbookVo) {
+		
+		//Dao
+		GuestbookDao guestbookDao = new GuestbookDao();
+		//Insert Dao Method
+		guestbookDao.guestbookInsert(guestbookVo);
+		
+		return "redirect:./addlist";
 	}
-
+	
+	//------------------------------ Delete Form ------------------------------//
+	@RequestMapping(value="/deleteForm", method = { RequestMethod.GET, RequestMethod.POST } )
+	public String deleteForm(@RequestParam ("no") int no, Model model) {
+		System.out.println(no);
+		model.addAttribute("no", no);
+		
+		return "/WEB-INF/deleteForm.jsp";
+	}
+	
+	//------------------------------ Delete Function ------------------------------//
+	@RequestMapping(value="/delete", method = { RequestMethod.GET, RequestMethod.POST } )
+	public String delete(//@RequestParam("no") int no,
+						 //@RequestParam("password") String password
+						 @ModelAttribute GuestbookVo deletepw) {
+		System.out.println("Delete Function");
+		System.out.println(deletepw);
+		//Vo
+//		GuestbookVo deletepw = new GuestbookVo(no, password);
+		System.out.println(deletepw);
+		//Dao
+		GuestbookDao guestbookDao = new GuestbookDao();
+		
+		//Delete
+		guestbookDao.guestbookDelete(deletepw);
+		
+		return "redirect:./addlist";
+	}
+	
 }

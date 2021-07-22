@@ -1,16 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
     
-<%@ page import ="com.javaex.dao.GuestbookDao" %>
-<%@ page import ="com.javaex.vo.GuestbookVo" %>
-<%@ page import ="java.util.List" %>
-    
-
-<% //Get Attribute = Controller에서 리스트
-	List<GuestbookVo> guestbookList = (List<GuestbookVo>)request.getAttribute("guestList"); 
-%>
- 
- 
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="./gbc" method="post">
+	<form action="./add" method="post">
 		<table border="1" width="550">
 			<tr>
 				<td>이름</td>
@@ -33,26 +24,21 @@
 				<td colspan="4"><button type="submit">확인</button></td>
 			</tr>
 		</table>
-		<input type="hidden" name="action" value="add">
 	</form>
 	<br>
-	<%
-	for (int i = 0; i < guestbookList.size(); i++) {
-	%>
+	<c:forEach items="${guestList}" var="guestList" varStatus="status">
 	<table border = "1" width="550">
 		<tr>
-			<td><%=guestbookList.get(i).getGuestbook_no() %></td>
-			<td><%=guestbookList.get(i).getName() %></td>
-			<td><%=guestbookList.get(i).getReg_date() %></td>
-			<td><a href="./gbc?action=dform&no=<%=guestbookList.get(i).getGuestbook_no() %>">[삭제]</a></td>
+			<td>${guestList.guestbookNo}</td>
+			<td>${guestList.name}</td>
+			<td>${guestList.reg_date }</td>
+			<td><a href="./deleteForm?no=${guestList.guestbookNo}">[삭제]</a></td>
 		</tr>
 		<tr>
-			<td colspan ="4"><%=guestbookList.get(i).getContent() %></td>
+			<td colspan ="4">${guestList.content}</td>
 		</tr>
 	</table>
 	<br>
-	<%
-	}
-	%>
+	</c:forEach>
 </body>
 </html>
